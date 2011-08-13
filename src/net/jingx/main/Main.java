@@ -15,6 +15,7 @@ limitations under the License.
 
 package net.jingx.main;
 
+import java.awt.EventQueue;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 
@@ -35,6 +36,7 @@ public class Main {
 	
 	private static final String CLI_SECRET = "s";
 	private static final String CLI_PASSCODE = "p";
+	private static final String CLI_HELP = "help";
 
 	/**
 	 * @param args
@@ -45,7 +47,7 @@ public class Main {
 		Options options = new Options();
 		options.addOption(CLI_SECRET, true, "generate secret key (input is the configuration key from google)");
 		options.addOption(CLI_PASSCODE, true, "generate passcode (input is the secret key)");
-		options.addOption(new Option( "help", "print this message"));
+		options.addOption(new Option( CLI_HELP, "print this message"));
 		try{
 			CommandLine line = parser.parse( options, args );
 			if(line.hasOption(CLI_SECRET)){
@@ -56,9 +58,21 @@ public class Main {
 				String secret = line.getOptionValue(CLI_PASSCODE);
 				String pin    = computePin(secret, null);
 				System.out.println(pin);
-			}else{
+			}else if(line.hasOption(CLI_HELP)){
 				HelpFormatter formatter = new HelpFormatter();
-				formatter.printHelp( "GAuthCli", options );
+				formatter.printHelp( "GAuthCli", options );				
+			}else{
+				EventQueue.invokeLater(new Runnable() {
+					public void run() {
+						try {
+							MainGui window = new MainGui();
+							window.doSetVisible();
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+					}
+				});
+				return;
 			}
 			System.out.println("Press any key to exit");
 			System.in.read();
