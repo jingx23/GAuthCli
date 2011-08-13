@@ -31,6 +31,9 @@ import org.apache.commons.cli.PosixParser;
 import de.jingx.net.main.Base32String.DecodingException;
 
 public class Main {
+	
+	private static final String CLI_SECRET = "s";
+	private static final String CLI_PASSCODE = "p";
 
 	/**
 	 * @param args
@@ -39,22 +42,22 @@ public class Main {
 	public static void main(String[] args) {
 		CommandLineParser parser = new PosixParser();
 		Options options = new Options();
-		options.addOption("s", true, "generate secret key (input is the configuration key from google)");
-		options.addOption("g", true, "generate passcode (input is the secret key)");
+		options.addOption(CLI_SECRET, true, "generate secret key (input is the configuration key from google)");
+		options.addOption(CLI_PASSCODE, true, "generate passcode (input is the secret key)");
 		options.addOption(new Option( "help", "print this message"));
 		try{
 			CommandLine line = parser.parse( options, args );
-			if(line.hasOption("s")){
-				String confKey = line.getOptionValue("s");
+			if(line.hasOption(CLI_SECRET)){
+				String confKey = line.getOptionValue(CLI_SECRET);
 				String secret  = generateSecret(confKey);
 				System.out.println("Your secret to generate pins: " + secret);
-			}else if(line.hasOption("g")){
-				String secret = line.getOptionValue("g");
+			}else if(line.hasOption(CLI_PASSCODE)){
+				String secret = line.getOptionValue(CLI_PASSCODE);
 				String pin    = computePin(secret, null);
 				System.out.println(pin);
 			}else{
 				HelpFormatter formatter = new HelpFormatter();
-				formatter.printHelp( "Google Authenticator", options );
+				formatter.printHelp( "GAuthCli", options );
 			}
 			System.out.println("Press any key to exit");
 			System.in.read();
@@ -86,7 +89,11 @@ public class Main {
 	}
 	
 	private static String generateSecret(String key){
-		return key.replaceAll("1", "I").replaceAll("0", "O");
+		String s = key;
+		s = s.replaceAll(" ", "");
+		s = s.replaceAll("1", "I");
+		s = s.replaceAll("0", "O");
+		return s;
 	}
 
 }
