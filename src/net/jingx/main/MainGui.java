@@ -4,6 +4,10 @@ import java.awt.EventQueue;
 import java.awt.SystemColor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -17,13 +21,16 @@ import javax.swing.JTextField;
 
 public class MainGui {
 
-	private static String PATH_GAUTH_SECKEY = System.getProperty("user.home") + "/" + ".gauth";
+	private static String PATH_GAUTH_SECKEY = System.getProperty("user.home") + "/" + ".gauth" + "/";
 	private static String SEC_FILENAME = "sec";
 	
 	private JFrame frmPinGenerator;
 	private JTextField txtSecretKey;
 	private JTextField txtPin;
 	private JButton btnSaveSecret;
+	private static final int MIN_KEY_BYTES = 10;
+	private JLabel lblTimersec;
+	private TimerNextKey timerNextKey;
 
 	/**
 	 * Launch the application.
@@ -55,47 +62,46 @@ public class MainGui {
 		String secret = readSecret();
 		frmPinGenerator = new JFrame();
 		frmPinGenerator.setTitle("Pin Generator");
-		frmPinGenerator.setBounds(100, 100, 286, 186);
+		frmPinGenerator.setBounds(100, 100, 286, 93);
 		frmPinGenerator.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmPinGenerator.getContentPane().setLayout(null);
 		
 		JLabel lblSecretKey = new JLabel("Secret Key:");
-		lblSecretKey.setBounds(26, 34, 68, 16);
+		lblSecretKey.setBounds(25, 12, 68, 16);
 		frmPinGenerator.getContentPane().add(lblSecretKey);
 		
 		txtSecretKey = new JTextField();
-		txtSecretKey.setBounds(96, 28, 134, 28);
+		txtSecretKey.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyReleased(KeyEvent arg0) {
+				if(txtSecretKey.getText() != null && !txtSecretKey.getText().equals("")){
+					timerNextKey.restart();
+					generateAndDisplayPin();
+				}else{
+					timerNextKey.stop();
+				}
+			}
+		});
+		txtSecretKey.setBounds(95, 6, 134, 28);
 		frmPinGenerator.getContentPane().add(txtSecretKey);
 		txtSecretKey.setColumns(10);
 		
 		JLabel lblPin = new JLabel("Pin:");
-		lblPin.setBounds(71, 68, 23, 16);
+		lblPin.setBounds(70, 46, 23, 16);
 		frmPinGenerator.getContentPane().add(lblPin);
 
 		txtPin = new JTextField();
 		txtPin.setBackground(SystemColor.window);
 		txtPin.setEditable(false);
-		txtPin.setBounds(96, 62, 134, 28);
+		txtPin.setBounds(95, 40, 134, 28);
 		txtPin.setBorder(javax.swing.BorderFactory.createEmptyBorder());
 		frmPinGenerator.getContentPane().add(txtPin);
 		txtPin.setColumns(10);
 		
-		JButton btnGenerate = new JButton("Generate");
-		btnGenerate.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				String secret = txtSecretKey.getText();
-				if(secret!=null && !secret.equals("")){
-					txtPin.setText(Main.computePin(txtSecretKey.getText(), null));	
-				}
-			}
-		});
-		btnGenerate.setBounds(101, 100, 117, 29);
-		frmPinGenerator.getContentPane().add(btnGenerate);
-		
 		btnSaveSecret = new JButton("");
 		btnSaveSecret.setBorder(javax.swing.BorderFactory.createEmptyBorder());
 		btnSaveSecret.setIcon(new ImageIcon(MainGui.class.getResource("/net/jingx/icons/disk.png")));
-		btnSaveSecret.setBounds(228, 29, 29, 29);
+		btnSaveSecret.setBounds(227, 7, 29, 29);
 		btnSaveSecret.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				String secret = txtSecretKey.getText();
@@ -105,10 +111,22 @@ public class MainGui {
 			}
 		});
 		frmPinGenerator.getContentPane().add(btnSaveSecret);
+		
+		lblTimersec = new JLabel("");
+		lblTimersec.setBounds(237, 46, 43, 16);
+		frmPinGenerator.getContentPane().add(lblTimersec);
+		
+		timerNextKey = new TimerNextKey(lblTimersec, makeTimerAction());
 		if(secret!=null){
 			txtSecretKey.setText(secret);
-			btnGenerate.doClick();
+			timerNextKey.start();
 		}
+		generateAndDisplayPin();
+		frmPinGenerator.addWindowFocusListener(new WindowAdapter() {
+		    public void windowGainedFocus(WindowEvent e) {
+		    	txtPin.requestFocusInWindow();
+		    }
+		});
 
 	}
 	
@@ -143,5 +161,29 @@ public class MainGui {
 
 	public void doSetVisible() {
 		frmPinGenerator.setVisible(true);
+	}
+	
+	private ActionListener makeTimerAction() {
+		ActionListener a = new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				generateAndDisplayPin();
+			}
+		};
+		return a;
+	}
+		
+	private void generateAndDisplayPin(){
+		String secret = txtSecretKey.getText();
+		if(secret!=null && !secret.equals("")){
+			if(secret.length() < MIN_KEY_BYTES){
+				txtPin.setText("Key is too short");
+				if(timerNextKey.isRunning()){
+					timerNextKey.stop();
+				}
+			}else{
+				txtPin.setText(Main.computePin(txtSecretKey.getText(), null));
+			}
+		}
 	}
 }
