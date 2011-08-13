@@ -19,5 +19,13 @@ Setup:
 
 Generate Pins:
 java -jar gauthcli.jar -p "secretKey"
+or
+java -jar gauthcli.jar
+
+Parameter:
+without one => GUI to Generate Pins
+-s make secret key from configuration key
+-p generate pin
+-help help
 
 !!1!1!!Thanks to Google for releasing "Google Authenticator" as open source (https://code.google.com/p/google-authenticator/).
