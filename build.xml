@@ -30,7 +30,7 @@
 					stubfile="deploy/macosx_applicationstub/JavaApplicationStub"
 					icon="images/authenticator250.icns"
 		            mainclass="net.jingx.main.Main">
-			  <jarfileset dir="deploy" includes="GAuthCli.jar"/>
+			  <jarfileset dir="deploy" includes="GAuthCliSimple.jar"/>
               <jarfileset dir="lib/commons_cli" includes="commons-cli-1.2.jar"/>
 		</jarbundler>
 		<antcall target="zipIt"/>
@@ -53,7 +53,7 @@
 	</target> 
 	
 	<target name="makeSimpleJar">
-		<jar destfile="deploy/GAuthCli.jar">
+		<jar destfile="deploy/GAuthCliSimple.jar">
 	       	<manifest>
 	            <attribute name="Main-Class" value="net.jingx.main.Main"/>
 	        	<attribute name="Class-Path" value="./ commons-cli-1.2.jar"/>
@@ -159,6 +159,10 @@
 		<zip destfile="${deploy.dir}/macosx.zip">
 			<zipfileset dir="${deploy.dir}/GAuthCli.app" excludes="Contents/MacOS/JavaApplicationStub" prefix="GAuthCli.app"/>
 			<zipfileset dir="${deploy.dir}/GAuthCli.app" includes="Contents/MacOS/JavaApplicationStub" prefix="GAuthCli.app" filemode="755"/>
+		</zip>
+		
+		<zip destfile="${deploy.dir}/jaronly.zip">
+		    <fileset dir="${deploy.dir}" includes="GAuthCli.jar"/>
 		</zip>
 	</target>
 	
