@@ -1,4 +1,4 @@
-bin/**/*
-build/**/*
 !.gitignore
 .DS_Store
+macosx.zip
+windows.zip
