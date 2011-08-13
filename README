@@ -5,7 +5,7 @@ Setup:
    1. Go to https://www.google.com/support/accounts/bin/static.py?page=guide.cs&guide=1056283&topic=1056284
    2. Set up your two-way authentification use mode Android phone do all steps until you see the barcode
    3. Click on "You can not scan the QR code"
-   4. Copy the key and call gauthcli.exe -s "yourKey" => you get your secret key to generate the pins (remember this key)
+   4. Copy the key and call java -jar gauthcli.jar -s "yourKey" => you get your secret key to generate the pins (remember this key)
    5. Set up your Android Phone if needed too and follow the other steps on google
  
  - Method 2: You already registered two-way authentication and Android Phone App
@@ -14,7 +14,10 @@ Setup:
    3. Edit Mobile-App and go through the steps until you see the barcode
    4. Delete "Google Authenticator" App or the "Google Authenticator" data under Settings => Application on your Android phone
    5. Click on "You can not scan the QR code"
-   6. Copy the key and call gauthcli.exe -s "yourKey" => you get your secret key to generate the pins (remember this key)
+   6. Copy the key and call java -jar gauthcli.jar -s "yourKey" => you get your secret key to generate the pins (remember this key)
    7. Now you can also set up your "Google Authenticator" App with the new key on Android
+
+Generate Pins:
+java -jar gauthcli.jar -p "secretKey"
 
 !!1!1!!Thanks to Google for releasing "Google Authenticator" as open source (https://code.google.com/p/google-authenticator/).
