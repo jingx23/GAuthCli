@@ -17,6 +17,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
 public class MainGui {
@@ -25,7 +26,7 @@ public class MainGui {
 	private static String SEC_FILENAME = "sec";
 	
 	private JFrame frmPinGenerator;
-	private JTextField txtSecretKey;
+	private JPasswordField txtSecretKey;
 	private JTextField txtPin;
 	private JButton btnSaveSecret;
 	private static final int MIN_KEY_BYTES = 10;
@@ -70,11 +71,12 @@ public class MainGui {
 		lblSecretKey.setBounds(25, 12, 68, 16);
 		frmPinGenerator.getContentPane().add(lblSecretKey);
 		
-		txtSecretKey = new JTextField();
+		txtSecretKey = new JPasswordField();
 		txtSecretKey.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyReleased(KeyEvent arg0) {
-				if(txtSecretKey.getText() != null && !txtSecretKey.getText().equals("")){
+				String secret = new String(txtSecretKey.getPassword());
+				if(secret != null && !secret.equals("")){
 					timerNextKey.restart();
 					generateAndDisplayPin();
 				}else{
@@ -104,7 +106,7 @@ public class MainGui {
 		btnSaveSecret.setBounds(227, 7, 29, 29);
 		btnSaveSecret.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				String secret = txtSecretKey.getText();
+				String secret = new String(txtSecretKey.getPassword());
 				if(secret!=null && !secret.equals("")){
 					saveSecret(secret);	
 				}
@@ -174,7 +176,7 @@ public class MainGui {
 	}
 		
 	private void generateAndDisplayPin(){
-		String secret = txtSecretKey.getText();
+		String secret = new String(txtSecretKey.getPassword());
 		if(secret!=null && !secret.equals("")){
 			if(secret.length() < MIN_KEY_BYTES){
 				txtPin.setText("Key is too short");
@@ -182,7 +184,7 @@ public class MainGui {
 					timerNextKey.stop();
 				}
 			}else{
-				txtPin.setText(Main.computePin(txtSecretKey.getText(), null));
+				txtPin.setText(Main.computePin(secret, null));
 			}
 		}
 	}
