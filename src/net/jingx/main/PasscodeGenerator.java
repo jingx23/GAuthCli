@@ -1,6 +1,6 @@
 // Copyright (C) 2009 Google Inc.
 
-package de.jingx.net.main;
+package net.jingx.main;
 
 import java.io.ByteArrayInputStream;
 import java.io.DataInput;

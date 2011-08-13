@@ -13,13 +13,15 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package de.jingx.net.main;
+package net.jingx.main;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
+
+import net.jingx.main.Base32String.DecodingException;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -28,7 +30,6 @@ import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.PosixParser;
 
-import de.jingx.net.main.Base32String.DecodingException;
 
 public class Main {
 	
