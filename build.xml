@@ -144,7 +144,7 @@
 		<property name="binDir" value=""/>
 		<taskdef name="launch4j" classname="net.sf.launch4j.ant.Launch4jTask" classpath="${launch4j.dir}/launch4j.jar:${launch4j.dir}/lib/xstream.jar" />
 		<launch4j bindir="${binDir}">
-			<config headerType="gui" jar="${deploy.dir}/${jarName}" outfile="${deploy.dir}/${exeName}" errTitle="GAuthCli" chdir="." customProcName="true" dontWrapJar="false">
+			<config headerType="gui" jar="${deploy.dir}/${jarName}" outfile="${deploy.dir}/${exeName}" errTitle="GAuthCli" chdir="." customProcName="true" dontWrapJar="false" icon="images/authenticator250.ico">
 				<singleInstance mutexName="${exeName}" />
 				<jre minVersion="1.6.0"/>
 			</config>

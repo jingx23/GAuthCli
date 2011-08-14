@@ -1,5 +1,6 @@
 package net.jingx.main;
 
+import java.awt.Color;
 import java.awt.EventQueue;
 import java.awt.SystemColor;
 import java.awt.event.ActionEvent;
@@ -19,11 +20,13 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
+import java.awt.Toolkit;
 
 public class MainGui {
 
 	private static String PATH_GAUTH_SECKEY = System.getProperty("user.home") + "/" + ".gauth" + "/";
 	private static String SEC_FILENAME = "sec";
+	private static Color COLOR_DEACTIVATE = OSUtils.isMacOSX() ? SystemColor.window : new Color(238,238,238);
 	
 	private JFrame frmPinGenerator;
 	private JPasswordField txtSecretKey;
@@ -60,10 +63,12 @@ public class MainGui {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
+		int dialogHeight = OSUtils.isMacOSX() ? 93 : 120;
 		String secret = readSecret();
 		frmPinGenerator = new JFrame();
-		frmPinGenerator.setTitle("Pin Generator");
-		frmPinGenerator.setBounds(100, 100, 286, 93);
+		frmPinGenerator.setIconImage(Toolkit.getDefaultToolkit().getImage(MainGui.class.getResource("/net/jingx/icons/authenticator250_16x16x32.png")));
+		frmPinGenerator.setTitle("Pin Generator"); 
+		frmPinGenerator.setBounds(100, 100, 286, dialogHeight);
 		frmPinGenerator.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmPinGenerator.getContentPane().setLayout(null);
 		
@@ -76,10 +81,11 @@ public class MainGui {
 			@Override
 			public void keyReleased(KeyEvent arg0) {
 				String secret = new String(txtSecretKey.getPassword());
-				if(secret != null && !secret.equals("")){
+				if(secret != null && secret.length() >= MIN_KEY_BYTES){
 					timerNextKey.restart();
 					generateAndDisplayPin();
 				}else{
+					txtPin.setText("Key is too short");
 					timerNextKey.stop();
 				}
 			}
@@ -93,7 +99,7 @@ public class MainGui {
 		frmPinGenerator.getContentPane().add(lblPin);
 
 		txtPin = new JTextField();
-		txtPin.setBackground(SystemColor.window);
+		txtPin.setBackground(COLOR_DEACTIVATE);
 		txtPin.setEditable(false);
 		txtPin.setBounds(95, 40, 134, 28);
 		txtPin.setBorder(javax.swing.BorderFactory.createEmptyBorder());
@@ -103,7 +109,7 @@ public class MainGui {
 		btnSaveSecret = new JButton("");
 		btnSaveSecret.setBorder(javax.swing.BorderFactory.createEmptyBorder());
 		btnSaveSecret.setIcon(new ImageIcon(MainGui.class.getResource("/net/jingx/icons/disk.png")));
-		btnSaveSecret.setBounds(227, 7, 29, 29);
+		btnSaveSecret.setBounds(229, 12, 16, 16);
 		btnSaveSecret.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				String secret = new String(txtSecretKey.getPassword());
@@ -115,7 +121,7 @@ public class MainGui {
 		frmPinGenerator.getContentPane().add(btnSaveSecret);
 		
 		lblTimersec = new JLabel("");
-		lblTimersec.setBounds(237, 46, 43, 16);
+		lblTimersec.setBounds(230, 46, 43, 16);
 		frmPinGenerator.getContentPane().add(lblTimersec);
 		
 		timerNextKey = new TimerNextKey(lblTimersec, makeTimerAction());
