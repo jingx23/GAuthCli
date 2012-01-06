@@ -3,6 +3,8 @@ package net.jingx.main;
 import java.awt.Color;
 import java.awt.EventQueue;
 import java.awt.SystemColor;
+import java.awt.Toolkit;
+import java.awt.datatransfer.StringSelection;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
@@ -20,7 +22,6 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
-import java.awt.Toolkit;
 
 public class MainGui {
 
@@ -133,6 +134,7 @@ public class MainGui {
 		frmPinGenerator.addWindowFocusListener(new WindowAdapter() {
 		    public void windowGainedFocus(WindowEvent e) {
 		    	txtPin.requestFocusInWindow();
+		    	copyPinToClipboard();
 		    }
 		});
 
@@ -191,7 +193,13 @@ public class MainGui {
 				}
 			}else{
 				txtPin.setText(Main.computePin(secret, null));
+				copyPinToClipboard();
 			}
 		}
+	}
+
+	private void copyPinToClipboard() {
+		StringSelection ss = new StringSelection(txtPin.getText());
+		Toolkit.getDefaultToolkit().getSystemClipboard().setContents(ss, null);
 	}
 }
