@@ -27,7 +27,7 @@ public class MainGui {
 	private static String PATH_GAUTH_SECKEY = System.getProperty("user.home") + "/" + ".gauth" + "/";
 	private static String SEC_FILENAME = "sec";
 	private static Color COLOR_DEACTIVATE = OSUtils.isMacOSX() ? SystemColor.window : new Color(238,238,238);
-	
+
 	private JFrame frmPinGenerator;
 	private JPasswordField txtSecretKey;
 	private JTextField txtPin;
@@ -67,15 +67,15 @@ public class MainGui {
 		String secret = readSecret();
 		frmPinGenerator = new JFrame();
 		frmPinGenerator.setIconImage(Toolkit.getDefaultToolkit().getImage(MainGui.class.getResource("/net/jingx/icons/authenticator250_16x16x32.png")));
-		frmPinGenerator.setTitle("Pin Generator"); 
+		frmPinGenerator.setTitle("Pin Generator");
 		frmPinGenerator.setBounds(100, 100, 286, dialogHeight);
 		frmPinGenerator.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmPinGenerator.getContentPane().setLayout(null);
-		
+
 		JLabel lblSecretKey = new JLabel("Secret Key:");
 		lblSecretKey.setBounds(25, 12, 68, 16);
 		frmPinGenerator.getContentPane().add(lblSecretKey);
-		
+
 		txtSecretKey = new JPasswordField();
 		txtSecretKey.addKeyListener(new KeyAdapter() {
 			@Override
@@ -93,7 +93,7 @@ public class MainGui {
 		txtSecretKey.setBounds(95, 6, 134, 28);
 		frmPinGenerator.getContentPane().add(txtSecretKey);
 		txtSecretKey.setColumns(10);
-		
+
 		JLabel lblPin = new JLabel("Pin:");
 		lblPin.setBounds(70, 46, 23, 16);
 		frmPinGenerator.getContentPane().add(lblPin);
@@ -105,7 +105,7 @@ public class MainGui {
 		txtPin.setBorder(javax.swing.BorderFactory.createEmptyBorder());
 		frmPinGenerator.getContentPane().add(txtPin);
 		txtPin.setColumns(10);
-		
+
 		btnSaveSecret = new JButton("");
 		btnSaveSecret.setBorder(javax.swing.BorderFactory.createEmptyBorder());
 		btnSaveSecret.setIcon(new ImageIcon(MainGui.class.getResource("/net/jingx/icons/disk.png")));
@@ -114,16 +114,16 @@ public class MainGui {
 			public void actionPerformed(ActionEvent arg0) {
 				String secret = new String(txtSecretKey.getPassword());
 				if(secret!=null && !secret.equals("")){
-					saveSecret(secret);	
+					saveSecret(secret);
 				}
 			}
 		});
 		frmPinGenerator.getContentPane().add(btnSaveSecret);
-		
+
 		lblTimersec = new JLabel("");
 		lblTimersec.setBounds(230, 46, 43, 16);
 		frmPinGenerator.getContentPane().add(lblTimersec);
-		
+
 		timerNextKey = new TimerNextKey(lblTimersec, makeTimerAction());
 		if(secret!=null){
 			txtSecretKey.setText(secret);
@@ -137,7 +137,7 @@ public class MainGui {
 		});
 
 	}
-	
+
 	private String readSecret(){
 		try{
 			String secret = null;
@@ -153,7 +153,7 @@ public class MainGui {
 			throw new RuntimeException(e);
 		}
 	}
-	
+
 	private void saveSecret(String secret){
 		try{
 			File fDirGAuth = new File(PATH_GAUTH_SECKEY);
@@ -170,7 +170,7 @@ public class MainGui {
 	public void doSetVisible() {
 		frmPinGenerator.setVisible(true);
 	}
-	
+
 	private ActionListener makeTimerAction() {
 		ActionListener a = new ActionListener() {
 			@Override
@@ -180,7 +180,7 @@ public class MainGui {
 		};
 		return a;
 	}
-		
+
 	private void generateAndDisplayPin(){
 		String secret = new String(txtSecretKey.getPassword());
 		if(secret!=null && !secret.equals("")){
